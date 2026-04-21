@@ -5,16 +5,10 @@ import pandas
 import datetime as dt
 import random
 
-load_dotenv()
 
-today = (dt.datetime.now().month, dt.datetime.now().day)
 
-birthday_data = pandas.read_csv("birthdays.csv")
-
-birthday_dict = {(row.month, row.day):row for (_, row) in birthday_data.iterrows()}
-
-def send_birthday_email():
-    birthday_haver = birthday_dict[today]
+def send_birthday_email(birthdays, today):
+    birthday_haver = birthdays[today]
     files = os.listdir("letter_templates")
 
     with open(f"letter_templates/{random.choice(files)}") as file:
@@ -30,8 +24,20 @@ def send_birthday_email():
             msg=f"Subject:Happy Birthday!\n\n{data}."
         )
 
-if today in birthday_dict:
-    send_birthday_email()
+def main():
+    load_dotenv()
+
+    today = (dt.datetime.now().month, dt.datetime.now().day)
+
+    birthday_data = pandas.read_csv("birthdays.csv")
+
+    birthday_dict = {(row.month, row.day): row for (_, row) in birthday_data.iterrows()}
+
+    if today in birthday_dict:
+        send_birthday_email(birthday_dict, today)
+
+if __name__ == "__main__":
+    main()
 
 
 
