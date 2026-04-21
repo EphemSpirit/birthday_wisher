@@ -1,16 +1,14 @@
-# This is a sample Python script.
+import os
+import smtplib
+from dotenv import load_dotenv
 
-# Press Ctrl+F5 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+load_dotenv()
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press F9 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+    connection.starttls()
+    connection.login(user=os.getenv("GMAIL_ADDRESS"), password=os.getenv("GMAIL_APP_PASSWORD"))
+    connection.sendmail(
+        from_addr=os.getenv("GMAIL_ADDRESS"),
+        to_addrs=os.getenv("YAHOO_ADDRESS"),
+        msg="Subject:Hello\n\nThis is the body of my email."
+    )
